@@ -1,0 +1,51 @@
+@model List<Wedding>;
+<a class="btn btn-light" href="/new/wedding">Add a Wedding</a>
+<h1>@ViewBag.LoggedinUser.UserId</h1>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Wedding</th>
+            <th>Date</th>
+            <th>Guests</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var w in Model)
+        {
+            <tr>
+                <td>@w.WedderOne & @w.WedderTwo</td>
+                <td>
+                    @w.WeddingDate
+                </td>
+                <td>
+                    @w.Guests.Count
+                </td>
+                <td>
+                    @if (w.Planner.UserId == @ViewBag.LoggedinUser.UserId)
+                    {
+                        <a href="/delete/wedding/@w.WeddingId">Delete</a>
+                    }
+                    else
+                    {
+                        if (w.Guests.Any(r => r.UserId == @ViewBag.LoggedinUser.UserId))
+                        {
+                            <a asp-controller="Home" asp-action="DRSVP" asp-route-WID=@w.WeddingId
+                                asp-route-UID=@ViewBag.LoggedinUser.UserId>DRSVP</a>
+                        }
+                        else{
+                            <a asp-controller="Home" asp-action="RSVP" asp-route-WID=@w.WeddingId
+                                asp-route-UID=@ViewBag.LoggedinUser.UserId>RSVP</a>
+                        }
+                    }
+                        </td>
+                    </tr>
+        }
+    </tbody>
+</table>
+@* @foreach (var w in ViewBag.Weddings)
+    {
+    <a asp-action="RSVP" asp-route-UID=@ViewBag.LoggedinUser.UserID
+    asp-route-WID=@ViewBag.Wedding.WeddingId>@ViewBag.Wedding.WeddingDate</a>
+    } *@
